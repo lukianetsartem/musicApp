@@ -18,32 +18,73 @@ export const App = function () {
 
     const [isPlaying, setAudioState] = useState(false)
     const [volume, setVolume] = useState(0.5)
+    const [currentTime, setCurrentTime] = useState(0)
+    const [duration, setDuration] = useState(0)
 
-    const audio: any = useRef()
-    const volumeController: any = useRef()
-    const timeController: any = useRef()
+    // ANY TYPE SHOUD BE REMOVED
+    const audio:any = useRef() // ref to the audio element
+    const volumeController:any = useRef() // ref to the volume controller
+    const timeController:any = useRef() // ref to the time controller
+
+    // Setting up music track duration after metadata loaded
+    const onLoadedMetaData = () => {
+        setDuration(Math.floor(audio.current.duration))
+    }
+    // End
 
     useEffect(() => {
         audio.current.volume = volume
+        setCurrentTime(audio.current.currentTime)
+        onLoadedMetaData()
     }, [volume])
 
-    const audioController = () => {
-        if (isPlaying) {
-            setAudioState(false)
-            audio.current.pause()
+    // Transformation from seconds format to minutes format
+    const calculateTime = (time:number) => {
+        const minutes = Math.floor(time / 60)
+        const seconds = Math.round((time / 60 - Math.floor(minutes)) * 60)
+        if(seconds < 10) {
+            return `${minutes}:0${seconds}`
         } else {
-            setAudioState(true)
-            audio.current.play()
+            return `${minutes}:${seconds}`
         }
     }
+    // End
 
+    // Current time updaiting
+    const playing = () => {
+        requestAnimationFrame(playing)
+        setCurrentTime(audio.current.currentTime)
+        console.log('updaiting')
+    }
+    // End
+
+    // Play/stop, playing state controller
+    const audioController = () => {
+        if (!isPlaying) {
+            setAudioState(true)
+            audio.current.play()
+            requestAnimationFrame(playing)
+        } else {
+            setAudioState(false)
+            audio.current.pause()
+            // BUG HERE!!! NEEDED TO PROVIDE cancelAnimationFrame()
+        }
+    }
+    // End
+
+    // Volume controller
     const changeVolume = () => {
         setVolume(Number(volumeController.current.value) / 100)
     }
+    // End
 
+    // Time conroller
     const changeTime = () => {
-        console.log('time changed')
+        const currentTime = timeController.current.value
+        setCurrentTime(currentTime)
+        audio.current.currentTime = currentTime
     }
+    // End
 
     return (
         <div>
@@ -55,7 +96,7 @@ export const App = function () {
                         <img alt='play' src={play}/>
                     </button>}
                 <p className={'song-name'}><a href={song.artistLink}>{song.artist}</a> - {song.name}</p>
-                <audio ref={audio} src={song.audio}/>
+                <audio ref={audio} src={song.audio} preload="metadata" onLoadedMetadata={onLoadedMetaData}/>
             </div>
             <div className={'volume-controller'}>
                 {volume === 0 && <img className='volume-icon' src={zeroVolume} alt={''}/>}
@@ -66,14 +107,15 @@ export const App = function () {
                        max={100}/>
             </div>
             <div className={'time-controller'}>
-                <span>0:00</span>
+                <span>{calculateTime(currentTime)}</span>
                 <input className={'time-slider'}
+                       defaultValue={0}
                        onChange={changeTime}
                        ref={timeController}
                        type={'range'}
                        min={0}
-                       max={100}/>
-                <span>5:03</span>
+                       max={duration}/>
+                <span>{(duration && !isNaN(duration)) && calculateTime(duration)}</span>
             </div>
         </div>
     )

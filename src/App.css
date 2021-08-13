@@ -61,6 +61,7 @@ body {
 
 .volume-icon {
     width: 30px;
+    cursor: pointer;
 }
 
 .time-slider {
