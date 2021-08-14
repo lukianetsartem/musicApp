@@ -331,3 +331,31 @@ body {
     z-index: 0;
     cursor: pointer;
 }
+
+.replay-controller {
+    margin-right: 14px;
+}
+
+.replay {
+    position: relative;
+    cursor: pointer;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    width: 15px;
+    height: 15px;
+}
+
+.replay span {
+    display: none;
+    color: grey;
+    font-size: 8px;
+    position: absolute;
+}
+
+.replay img {
+    width: 15px;
+}
