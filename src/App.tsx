@@ -13,6 +13,7 @@ export const App = function () {
         artist: 'Lil Nas X',
         artistLink: 'lilnasx',
         name: "MONTERO (Call Me By Your Name)",
+        cover: "https://cdns-images.dzcdn.net/images/cover/fc939e4030254f80bd90b616f2a1d0a6/500x500.jpg",
         audio: montero
     }
 
@@ -22,9 +23,9 @@ export const App = function () {
     const [duration, setDuration] = useState(0)
 
     // ANY TYPE SHOUD BE REMOVED
-    const audio:any = useRef() // ref to the audio element
-    const volumeController:any = useRef() // ref to the volume controller
-    const timeController:any = useRef() // ref to the time controller
+    const audio: any = useRef() // ref to the audio element
+    const volumeController: any = useRef() // ref to the volume controller
+    const timeController: any = useRef() // ref to the time controller
 
     // Setting up music track duration after metadata loaded
     const onLoadedMetaData = () => {
@@ -39,10 +40,10 @@ export const App = function () {
     }, [volume])
 
     // Transformation from seconds format to minutes format
-    const calculateTime = (time:number) => {
+    const calculateTime = (time: number) => {
         const minutes = Math.floor(time / 60)
         const seconds = Math.round((time / 60 - Math.floor(minutes)) * 60)
-        if(seconds < 10) {
+        if (seconds < 10) {
             return `${minutes}:0${seconds}`
         } else {
             return `${minutes}:${seconds}`
@@ -50,30 +51,42 @@ export const App = function () {
     }
     // End
 
+    const animationRef = useRef(0)
+
     // Current time updaiting
     const playing = () => {
-        requestAnimationFrame(playing)
+        // requestAnimationFrame() used here to make updaiting loop (updates data 60 times per second)
+        animationRef.current = requestAnimationFrame(playing)
+        // setting up current time for current time updaiting
         setCurrentTime(audio.current.currentTime)
-        console.log('updaiting')
+        // setting up property to update progress bar
+        timeController.current.style.setProperty('--seek-before-width', `${audio.current.currentTime / duration * 100}%`)
     }
     // End
 
     // Play/stop, playing state controller
     const audioController = () => {
         if (!isPlaying) {
+            // Setting isPlaying statement
             setAudioState(true)
+            // Play music
             audio.current.play()
-            requestAnimationFrame(playing)
+            // requestAnimationFrame() starts updating process for current time and progress bar
+            animationRef.current = requestAnimationFrame(playing)
         } else {
+            // Setting isPlaying statement
             setAudioState(false)
+            // Pause music
             audio.current.pause()
-            // BUG HERE!!! NEEDED TO PROVIDE cancelAnimationFrame()
+            // cancelAnimationFrame() cancel updating process for current time and progress bar
+            cancelAnimationFrame(animationRef.current)
         }
     }
     // End
 
     // Volume controller
     const changeVolume = () => {
+        // Setting volume for audio
         setVolume(Number(volumeController.current.value) / 100)
     }
     // End
@@ -81,41 +94,51 @@ export const App = function () {
     // Time conroller
     const changeTime = () => {
         const currentTime = timeController.current.value
+        // Updaiting current time statement
         setCurrentTime(currentTime)
+        // Updaiting progress bar
+        timeController.current.style.setProperty('--seek-before-width', `${audio.current.currentTime / duration * 100}%`)
+        // Updaiting current time in audio
         audio.current.currentTime = currentTime
     }
     // End
 
     return (
         <div>
+            <audio ref={audio} src={song.audio} preload="metadata" onLoadedMetadata={onLoadedMetaData}/>
             <div className={'song'}>
-                {isPlaying ? <button className={'song-controller'} onClick={audioController}>
-                        <img alt='stop' src={stop}/>
-                    </button>
-                    : <button className={'song-controller play-controller'} onClick={audioController}>
-                        <img alt='play' src={play}/>
-                    </button>}
-                <p className={'song-name'}><a href={song.artistLink}>{song.artist}</a> - {song.name}</p>
-                <audio ref={audio} src={song.audio} preload="metadata" onLoadedMetadata={onLoadedMetaData}/>
-            </div>
-            <div className={'volume-controller'}>
-                {volume === 0 && <img className='volume-icon' src={zeroVolume} alt={''}/>}
-                {volume > 0 && volume <= 0.4 && <img className='volume-icon' src={minimumVolume} alt={''}/>}
-                {volume > 0.4 && volume <= 0.8 && <img className='volume-icon' src={mediumVolume} alt={''}/>}
-                {volume > 0.8 && <img className='volume-icon' src={maximumVolume} alt={''}/>}
-                <input className={'volume-slider'} onChange={changeVolume} ref={volumeController} type={'range'} min={0}
-                       max={100}/>
-            </div>
-            <div className={'time-controller'}>
-                <span>{calculateTime(currentTime)}</span>
-                <input className={'time-slider'}
-                       defaultValue={0}
-                       onChange={changeTime}
-                       ref={timeController}
-                       type={'range'}
-                       min={0}
-                       max={duration}/>
-                <span>{(duration && !isNaN(duration)) && calculateTime(duration)}</span>
+                <div className={'song-data'}>
+                    <img className={"song-cover"} alt='' src={song.cover}/>
+                    <p className={'song-name'}><a href={song.artistLink}>{song.artist}</a> - {song.name}</p>
+                </div>
+                <div className={'song-control'}>
+                    {isPlaying ? <button className={'song-controller'} onClick={audioController}>
+                            <img alt='stop' src={stop}/>
+                        </button>
+                        : <button className={'song-controller play-controller'} onClick={audioController}>
+                            <img alt='play' src={play}/>
+                        </button>}
+                    <div className={'time-controller'}>
+                        <span>{calculateTime(currentTime)}</span>
+                        <input className={'time-slider'}
+                               defaultValue={0}
+                               onChange={changeTime}
+                               ref={timeController}
+                               type={'range'}
+                               min={0}
+                               max={duration}/>
+                        <span>{(duration && !isNaN(duration)) && calculateTime(duration)}</span>
+                    </div>
+                </div>
+                <div className={'volume-controller'}>
+                    {volume === 0 && <img className='volume-icon' src={zeroVolume} alt={''}/>}
+                    {volume > 0 && volume <= 0.4 && <img className='volume-icon' src={minimumVolume} alt={''}/>}
+                    {volume > 0.4 && volume <= 0.8 && <img className='volume-icon' src={mediumVolume} alt={''}/>}
+                    {volume > 0.8 && <img className='volume-icon' src={maximumVolume} alt={''}/>}
+                    <input className={'volume-slider'} onChange={changeVolume} ref={volumeController} type={'range'}
+                           min={0}
+                           max={100}/>
+                </div>
             </div>
         </div>
     )
