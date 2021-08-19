@@ -1,0 +1,24 @@
+.profileContent {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.profileNav {
+    display: flex;
+    flex-direction: column;
+    padding-top: 50px;
+}
+
+.navItem {
+    margin-top: 5px;
+    font-weight: bold ;
+    font-size: 20px;
+    color: aliceblue;
+}
+
+.userName {
+    font-weight: 500;
+    font-size: 20px;
+}

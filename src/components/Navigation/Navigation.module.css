@@ -1,0 +1,24 @@
+.navContent{
+    display: flex;
+    justify-content: space-between;
+    background-color: #003B46;
+}
+
+.items {
+    margin-right: 40%;
+    display: flex;
+    justify-content: center;
+}
+
+.navItem {
+    font-weight: bold;
+    font-size: 20px;
+    text-decoration: none;
+    color: aliceblue;
+    margin: 20px;
+}
+
+.logoItem{
+    height: 60px;
+    margin: 10px;
+}

@@ -1,8 +1,22 @@
 import React from 'react';
-import {Player} from './components/Player'
+
+import {Homepage} from './components/Homepage/Homepage'
+import {Navigation} from './components/Navigation/Navigation'
+import {Profile} from "./components/Profile/Profile";
+import {Footer} from './components/Footer/Footer'
+import './App.css'
+
 
 export const App = () => {
     return (
-        <Player/>
+        <div>
+            <div className='app-wrapper'>
+                <Homepage/>
+                <Navigation/>
+                <Profile/>
+                <Footer/>
+            </div>
+        </div>
     )
 }
+

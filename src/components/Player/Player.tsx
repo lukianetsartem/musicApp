@@ -1,13 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
-import '../App.css'
-import montero from '../assets/audio/montero.mp3'
-import minimumVolume from '../assets/svg/minimumVolume.svg'
-import mediumVolume from '../assets/svg/mediumVolume.svg'
-import maximumVolume from '../assets/svg/maximumVolume.svg'
-import zeroVolume from '../assets/svg/zeroVolume.svg'
-import play from '../assets/svg/play.svg'
-import stop from '../assets/svg/stop.svg'
-import replay from '../assets/svg/replay.svg'
+import '../../components/Player/Player.css'
+import montero from '../../assets/audio/montero.mp3'
+import minimumVolume from '../../assets/svg/minimumVolume.svg'
+import mediumVolume from '../../assets/svg/mediumVolume.svg'
+import maximumVolume from '../../assets/svg/maximumVolume.svg'
+import zeroVolume from '../../assets/svg/zeroVolume.svg'
+import play from '../../assets/svg/play.svg'
+import stop from '../../assets/svg/stop.svg'
+import replay from '../../assets/svg/replay.svg'
 
 export const Player = () => {
     const song = {
