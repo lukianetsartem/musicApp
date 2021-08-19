@@ -49,8 +49,8 @@ body {
     height: 50px;
     background: none;
     border: 1px solid rgba(0, 0, 0, 0.07);
-    border-radius: 100%;
     cursor: pointer;
+    border-radius: 100%;
 }
 
 .song-controller img {
@@ -211,7 +211,6 @@ body {
     --knoby: red;
     --selectedKnoby: blue;
 
-    border-radius: 10px;
     appearance: none;
     background: var(--bar-bg);
     position: relative;
@@ -231,7 +230,6 @@ body {
     animate: 0.2s;
     box-shadow: 0px 0px 0px #000000;
     background: #D5DBD3;
-    border-radius: 5px;
     border: 0px solid #000000;
 }
 
@@ -240,7 +238,6 @@ body {
     border: none;
     height: 15px;
     width: 17px;
-    border-radius: 34px;
     background: none;
     cursor: pointer;
     -webkit-appearance: none;
@@ -260,7 +257,6 @@ body {
     animate: 0.2s;
     box-shadow: 0px 0px 0px #000000;
     background: #D5DBD3;
-    border-radius: 5px;
     border: 0px solid #000000;
 }
 
@@ -289,14 +285,12 @@ body {
 .time-slider::-ms-fill-lower {
     background: #D5DBD3;
     border: 0px solid #000000;
-    border-radius: 10px;
     box-shadow: 0px 0px 0px #000000;
 }
 
 .time-slider::-ms-fill-upper {
     background: #D5DBD3;
     border: 0px solid #000000;
-    border-radius: 10px;
     box-shadow: 0px 0px 0px #000000;
 }
 
@@ -323,7 +317,6 @@ body {
     content: '';
     width: var(--seek-before-width);
     height: 10px;
-    border-radius: 10px;
     background: #a3a3a3;
     position: absolute;
     top: -1px;
@@ -350,8 +343,7 @@ body {
 }
 
 .replay span {
-    display: none;
-    color: grey;
+     color: grey;
     font-size: 8px;
     position: absolute;
 }

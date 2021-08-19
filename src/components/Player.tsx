@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import '../App.css'
 import montero from '../assets/audio/montero.mp3'
 import minimumVolume from '../assets/svg/minimumVolume.svg'
@@ -23,11 +23,11 @@ export const Player = () => {
     const [volume, setVolume] = useState(0.5)
     const [currentTime, setCurrentTime] = useState(0)
     const [duration, setDuration] = useState(0)
+    const [maxTime, setMaxTime] = useState(0)
 
-    // ANY SHOULD BE REPLACED
-    const audio:any = useRef() // ref to the audio element
-    const volumeController:any = useRef() // ref to the volume controller
-    const timeController:any = useRef() // ref to the time controller
+    const audio = useRef() as MutableRefObject<HTMLAudioElement> // ref to the audio element
+    const volumeController = useRef() as MutableRefObject<HTMLInputElement> // ref to the volume controller
+    const timeController = useRef() as MutableRefObject<HTMLInputElement> // ref to the time controller
 
     // Setting up music track duration after metadata loaded
     const onLoadedMetaData = () => {
@@ -36,9 +36,13 @@ export const Player = () => {
     // End
 
     useEffect(() => {
+        // Setting up initial volume
         audio.current.volume = volume
-        timeController.current.max = duration
+        // Setting up song duration
+        if (!isNaN(duration)) setMaxTime(duration)
+        // Setting up current time
         setCurrentTime(audio.current.currentTime)
+        // Call track duraiton setting up function
         onLoadedMetaData()
     }, [volume, duration])
 
@@ -68,7 +72,7 @@ export const Player = () => {
         timeController.current.style.setProperty('--seek-before-width', `${audio.current.currentTime / duration * 100}%`)
         // Checking if song ended and stopping playing
         const isEnded = Math.floor(currentTime) === duration
-        if(isEnded) {
+        if (isEnded) {
             setAudioState(false)
             audio.current.pause()
         }
@@ -104,7 +108,7 @@ export const Player = () => {
 
     // Time conroller
     const changeTime = () => {
-        const currentTime = timeController.current.value
+        const currentTime = Number(timeController.current.value)
         // Updaiting current time statement
         setCurrentTime(currentTime)
         // Updaiting progress bar
@@ -114,15 +118,12 @@ export const Player = () => {
     }
     // End
 
-    const looped:any = useRef()
     // Replay controller
     const replayController = () => {
-        if(!isReplayable) {
+        if (!isReplayable) {
             setIsReplayable(true)
-            looped.current.style.setProperty('display', 'flex')
         } else {
             setIsReplayable(false)
-            looped.current.style.setProperty('display', 'none')
         }
     }
     // End
@@ -149,7 +150,8 @@ export const Player = () => {
                                onChange={changeTime}
                                ref={timeController}
                                type={'range'}
-                               min={0}/>
+                               min={0}
+                               max={maxTime || 0}/>
                         <span>{((duration && !isNaN(duration)) && calculateTime(duration)).toString()}</span>
                     </div>
                 </div>
@@ -157,7 +159,7 @@ export const Player = () => {
                     <div className={'replay-controller'}>
                         <button className={'replay'} onClick={replayController}>
                             <img alt='' src={replay}/>
-                            <span ref={looped}>1</span>
+                            {isReplayable && <span>1</span>}
                         </button>
                     </div>
                     {volume === 0 && <img className='volume-icon' src={zeroVolume} alt={''}/>}
