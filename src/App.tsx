@@ -1,5 +1,5 @@
 import React from 'react';
-
+import './Font.css'
 import {Homepage} from './components/Homepage/Homepage'
 import {Navigation} from './components/Navigation/Navigation'
 import {Profile} from "./components/Profile/Profile";
@@ -11,9 +11,9 @@ export const App = () => {
     return (
         <div>
             <div className='app-wrapper'>
-                <Homepage/>
                 <Navigation/>
                 <Profile/>
+                <Homepage/>
                 <Footer/>
             </div>
         </div>
