@@ -9,7 +9,7 @@ export const Profile = () => {
                 <div className={classes.profileNav}>
                     <a href='#' className={classes.navItem}>Settings</a>
                     <a href='#' className={classes.navItem}>Subscriptions</a>
-                    <a href='#' className={classes.navItem}>My playlists</a>
+                    <a href='#' className={classes.navItem}>My profile</a>
                 </div>
             </div>
         </div>

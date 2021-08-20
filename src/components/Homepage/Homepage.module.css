@@ -1,0 +1,8 @@
+.player {
+    position: sticky;
+    top: 88%;
+    bottom: 0;
+    background: #003B46;
+    width: 100%;
+
+}

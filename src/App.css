@@ -9,6 +9,8 @@
 
 .Nav {
     grid-area: N;
+    position: sticky;
+    top: 0;
 }
 
 .Profile {
